@@ -20,11 +20,16 @@ pipeline {
             }
         }
 
-        stage (" Action") {
-            steps {
-                echo "Terraform action is --> ${action}"
-                sh ("terraform ${action} ") 
-           }
+        stage("Action") {
+    steps {
+        script {
+            echo "Terraform action is --> ${action}"
+            if (action == "apply" || action == "destroy") {
+                sh "terraform ${action} --auto-approve"
+            } else {
+                sh "terraform ${action}"
+            }
         }
     }
 }
+
